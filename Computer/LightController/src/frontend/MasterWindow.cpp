@@ -22,4 +22,4 @@ void MasterWindow::Draw(ImVec2 pos, ImVec2 size)
 
 
 
-void MasterWindow::DrawContents() { ImGui::Text("Hello, world!"); }
+void MasterWindow::DrawContents() { pageWindow->Draw(); }

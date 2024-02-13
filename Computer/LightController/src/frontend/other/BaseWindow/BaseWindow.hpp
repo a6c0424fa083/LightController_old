@@ -27,9 +27,9 @@ public:
     float  default_ChildBorderSize            = 1.0F;
     float  default_ChildRounding              = 3.5F;
 
-    float fontSize      = 0.5F;
-    float save_margin   = 5.0F;
-    float border_margin = (2.0F / 5.0F) * save_margin;
+    float fontSize     = 0.5F;
+    float saveMargin   = 5.0F;
+    float borderMargin = (2.0F / 5.0F) * saveMargin;
 
 public:
     // inline void        draw_border(ImVec2 pos, ImVec2 size) const;

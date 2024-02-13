@@ -55,6 +55,10 @@ add_executable(
         src/frontend/other/BaseWindow/BaseWindow.hpp
         src/frontend/MasterWindow.cpp
         src/frontend/MasterWindow.hpp
+        src/API/PageSelect/PageSelect.cpp
+        src/API/PageSelect/PageSelect.hpp
+        src/frontend/PageWindow/PageWindow.cpp
+        src/frontend/PageWindow/PageWindow.hpp
 )
 
 
