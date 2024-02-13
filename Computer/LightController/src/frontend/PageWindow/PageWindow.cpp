@@ -16,13 +16,13 @@ void PageWindow::Draw()
     style.ChildBorderSize  = 0.0F;
     style.ChildRounding    = 0.0F;
     ImGui::Begin("HeaderWindow", nullptr, STATIC__NO_VISUALS);
-    DrawContents();
     style.WindowBorderSize = default_WindowBorderSize;
     style.WindowRounding   = default_WindowRounding;
     style.FrameBorderSize  = default_FrameBorderSize;
     style.FrameRounding    = default_FrameRounding;
     style.ChildBorderSize  = default_ChildBorderSize;
     style.ChildRounding    = default_ChildRounding;
+    DrawContents();
     ImGui::End();
     POP_FONT()
 }
