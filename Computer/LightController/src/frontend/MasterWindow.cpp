@@ -2,8 +2,16 @@
 
 MasterWindow::~MasterWindow()
 {
-    free(pageWindow);
-    pageWindow = nullptr;
+    if (pageWindow != nullptr)
+    {
+        delete pageWindow;
+        pageWindow = nullptr;
+    }
+    if (homeWindow != nullptr)
+    {
+        delete homeWindow;
+        homeWindow = nullptr;
+    }
 }
 
 void MasterWindow::Draw(ImVec2 pos, ImVec2 size)
@@ -28,4 +36,32 @@ void MasterWindow::Draw(ImVec2 pos, ImVec2 size)
 
 
 
-void MasterWindow::DrawContents() { pageWindow->Draw(); }
+void MasterWindow::DrawContents()
+{
+    pageWindow->Draw();
+
+    // construction
+    switch (PageSelect::getActivePageID())
+    {
+        case page::HOME:
+            if (homeWindow == nullptr)
+                homeWindow =
+                    new HomeWindow(ImVec2(saveMargin, pageWindow->getPos().y + pageWindow->getSize().y + saveMargin),
+                                   ImVec2(io_width - (2 * saveMargin),
+                                          io_height - (pageWindow->getPos().y + pageWindow->getSize().y + (2 * saveMargin))));
+            homeWindow->Draw();
+            break;
+        default:
+            break;
+    }
+
+    // destruction
+    if (PageSelect::getActivePageID() != page::HOME)
+    {
+        if (homeWindow != nullptr)
+        {
+            delete homeWindow;
+            homeWindow = nullptr;
+        }
+    }
+}

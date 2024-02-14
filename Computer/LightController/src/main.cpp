@@ -147,6 +147,9 @@ int main()
     glfwDestroyWindow(window);
     glfwTerminate();
 
+    delete masterWindow;
+    delete baseWindow;
+
     return 0;
 }
 

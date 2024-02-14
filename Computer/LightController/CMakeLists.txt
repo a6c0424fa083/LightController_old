@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.1.2
+        VERSION 0.2.0
         LANGUAGES C CXX
 )
 
@@ -59,6 +59,10 @@ add_executable(
         src/API/PageSelect/PageSelect.hpp
         src/frontend/PageWindow/PageWindow.cpp
         src/frontend/PageWindow/PageWindow.hpp
+        src/frontend/HomeWindow/HomeWindow.cpp
+        src/frontend/HomeWindow/HomeWindow.hpp
+        src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.cpp
+        src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
 )
 
 

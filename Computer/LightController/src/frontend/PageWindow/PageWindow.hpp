@@ -12,11 +12,11 @@ class PageWindow : BaseWindow
 {
 public:
     PageWindow() = delete;
-    PageWindow(ImVec2 pos, std::vector<std::string> *titles) : pos(pos), titles(titles) {}
+    inline PageWindow(ImVec2 pos, std::vector<std::string> *titles) : pos(pos), titles(titles) {}
 
-    void          Draw();
-    inline ImVec2 getSize() const { return size; }
-    inline ImVec2 getPos() const { return pos; }
+    void                        Draw();
+    [[nodiscard]] inline ImVec2 getPos() const { return pos; }
+    [[nodiscard]] inline ImVec2 getSize() const { return size; }
 
 private:
     inline void DrawContents();

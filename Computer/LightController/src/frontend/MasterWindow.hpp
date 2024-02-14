@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
+#include "API/PageSelect/PageSelect.hpp"
 #include "backend/other/defines.hpp"
+#include "frontend/HomeWindow/HomeWindow.hpp"
 #include "frontend/PageWindow/PageWindow.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
@@ -19,6 +21,7 @@ public:
 private:
     std::vector<std::string> titles     = { "Home", "Patch", "Location", "Effects", "Library", "Settings" };
     PageWindow              *pageWindow = new PageWindow(ImVec2(0.0F, 0.0F), &titles);
+    HomeWindow              *homeWindow = nullptr;
 };
 
 #endif  // MASTERWINDOW_HPP

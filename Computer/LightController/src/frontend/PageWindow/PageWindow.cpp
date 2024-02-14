@@ -15,7 +15,7 @@ void PageWindow::Draw()
     style.FrameRounding    = 0.0F;
     style.ChildBorderSize  = 0.0F;
     style.ChildRounding    = 0.0F;
-    ImGui::Begin("HeaderWindow", nullptr, STATIC__NO_VISUALS);
+    ImGui::Begin("PageWindow", nullptr, STATIC__NO_VISUALS);
     style.WindowBorderSize = default_WindowBorderSize;
     style.WindowRounding   = default_WindowRounding;
     style.FrameBorderSize  = default_FrameBorderSize;
