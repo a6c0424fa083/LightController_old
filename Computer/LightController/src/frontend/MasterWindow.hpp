@@ -11,6 +11,8 @@
 class MasterWindow : BaseWindow
 {
 public:
+    ~MasterWindow();
+
     void        Draw(ImVec2 pos, ImVec2 size);
     inline void DrawContents();
 

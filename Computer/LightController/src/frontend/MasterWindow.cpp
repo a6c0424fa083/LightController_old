@@ -1,5 +1,11 @@
 #include "MasterWindow.hpp"
 
+MasterWindow::~MasterWindow()
+{
+    free(pageWindow);
+    pageWindow = nullptr;
+}
+
 void MasterWindow::Draw(ImVec2 pos, ImVec2 size)
 {
     io.FontGlobalScale = fontSize;
