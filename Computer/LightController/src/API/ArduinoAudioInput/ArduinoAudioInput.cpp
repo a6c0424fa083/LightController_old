@@ -1,9 +1,4 @@
-//
-// Created by Jannis Sauer on 15.02.24.
-//
-
 #include "ArduinoAudioInput.hpp"
-
 
 size_t ArduinoAudioInput::intervalSize = 32;
 
