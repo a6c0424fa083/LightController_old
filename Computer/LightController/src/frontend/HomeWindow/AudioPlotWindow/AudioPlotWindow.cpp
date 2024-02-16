@@ -22,7 +22,7 @@ void AudioPlotWindow::DrawContent()
                       ImPlotFlags_NoBoxSelect | ImPlotFlags_NoInputs | ImPlotFlags_NoMouseText | ImPlotFlags_NoTitle |
                           ImPlotFlags_CanvasOnly);
 
-    // ImPlot::PlotLine("Left", graphData, audioDataL, dataSize);
-    // ImPlot::PlotLine("Right", graphData, audioDataR, dataSize);
+    ImPlot::PlotLine("Left", ArduinoAudioInput::getAudioDataL().data(), static_cast<int>(ArduinoAudioInput::getIntervalSize()));
+    ImPlot::PlotLine("Right", ArduinoAudioInput::getAudioDataR().data(), static_cast<int>(ArduinoAudioInput::getIntervalSize()));
     ImPlot::EndPlot();
 }
