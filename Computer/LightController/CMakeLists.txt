@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.2.0
+        VERSION 0.2.1
         LANGUAGES C CXX
 )
 
@@ -63,6 +63,8 @@ add_executable(
         src/frontend/HomeWindow/HomeWindow.hpp
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.cpp
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
+        src/API/ArduinoAudioInput/ArduinoAudioInput.cpp
+        src/API/ArduinoAudioInput/ArduinoAudioInput.hpp
 )
 
 

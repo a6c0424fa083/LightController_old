@@ -3,6 +3,7 @@
 
 #include <imgui.h>
 
+#include "frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
 class HomeWindow : BaseWindow
@@ -20,8 +21,15 @@ private:
     void DrawContent();
 
 private:
+    // HomeWindow
     ImVec2 pos;
     ImVec2 size;
+
+    // AudioPlotWindow
+    ImVec2 audioPlotSize = ImVec2(400.0F, 240.0F);
+    ImVec2 audioPlotPos = ImVec2(io_width - ((2 * saveMargin) + audioPlotSize.x), io_height - size.y);
+
+    AudioPlotWindow *audioPlotWindow = new AudioPlotWindow(audioPlotPos, audioPlotSize);
 };
 
 #endif  // HOMEWINDOW_HPP

@@ -17,8 +17,8 @@ enum page : size_t
 class PageSelect
 {
 public:
-    static void   setActivePageID(size_t newActivePageID);
-    static size_t getActivePageID();
+    inline static void   setActivePageID(size_t newActivePageID) { activePageID = newActivePageID; };
+    inline static size_t getActivePageID() { return activePageID; };
 
 private:
     static size_t activePageID;

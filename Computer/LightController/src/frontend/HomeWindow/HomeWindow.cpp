@@ -10,4 +10,8 @@ void HomeWindow::Draw()
     POP_FONT()
 }
 
-void HomeWindow::DrawContent() { ImGui::Text("Hello World!"); }
+void HomeWindow::DrawContent()
+{
+    ImGui::Text("Hello World!");
+    audioPlotWindow->Draw();
+}
