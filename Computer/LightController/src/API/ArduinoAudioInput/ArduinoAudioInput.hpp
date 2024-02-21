@@ -11,11 +11,11 @@ public:
     inline static size_t getIntervalSize() { return intervalSize; }
     inline static void   setIntervalSize(size_t newIntervalSize) { intervalSize = newIntervalSize; }
 
-    inline static std::vector<uint16_t> getAudioDataL() {return audioDataL;}
-    inline static std::vector<uint16_t> getAudioDataR() {return audioDataR;}
+    inline static std::vector<uint16_t> getAudioDataL() { return audioDataL; }
+    inline static std::vector<uint16_t> getAudioDataR() { return audioDataR; }
 
-    inline static void setAudioDataL(std::vector<uint16_t> newAudioDataL) {audioDataL = std::move(newAudioDataL);}
-    inline static void setAudioDataR(std::vector<uint16_t> newAudioDataR) {audioDataL = std::move(newAudioDataR);}
+    inline static void setAudioDataL(std::vector<uint16_t> newAudioDataL) { audioDataL = std::move(newAudioDataL); }
+    inline static void setAudioDataR(std::vector<uint16_t> newAudioDataR) { audioDataL = std::move(newAudioDataR); }
 
 private:
     static size_t                intervalSize;
