@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <imgui.h>
 
 #include "API/PageSelect/PageSelect.hpp"
 #include "backend/other/defines.hpp"

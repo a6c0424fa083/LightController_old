@@ -6,9 +6,9 @@ void AudioPlotWindow::Draw()
 {
     PUSH_FONT(NUMBER)
     setWindowPosSize(pos, size);
-    ImGui::Begin("AudioPlotWindow", nullptr, STATIC__NO_VISUALS);
+    ImGui::BeginChild("AudioPlotWindow", size, true, STATIC__NO_VISUALS);
     DrawContent();
-    ImGui::End();
+    ImGui::EndChild();
     POP_FONT()
 }
 
