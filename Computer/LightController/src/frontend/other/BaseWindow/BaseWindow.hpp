@@ -20,12 +20,12 @@ public:
     ImVec4 default_ImGuiCol_FrameBg           = ImVec4(0.11F, 0.11F, 0.11F, 1.0F);
     ImVec2 default_WindowPadding              = ImVec2(0.0F, 0.0F);
     ImVec2 default_FramePadding               = ImVec2(0.0F, 0.0F);
-    float  default_WindowBorderSize           = 1.0F;
-    float  default_WindowRounding             = 3.5F;
+    float  default_WindowBorderSize           = 1.0F; // DO NOT CHANGE (HARDCODED SOMEWHERE)
+    float  default_WindowRounding             = 5.0F;
     float  default_FrameBorderSize            = 1.0F;
-    float  default_FrameRounding              = 3.5F;
+    float  default_FrameRounding              = 5.0F;
     float  default_ChildBorderSize            = 1.0F;
-    float  default_ChildRounding              = 3.5F;
+    float  default_ChildRounding              = 5.0F;
 
     float fontSize     = 0.5F;
     float saveMargin   = 5.0F;

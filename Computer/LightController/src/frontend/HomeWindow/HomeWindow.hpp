@@ -27,7 +27,7 @@ private:
 
     // AudioPlotWindow
     ImVec2 audioPlotSize = ImVec2(400.0F, 240.0F);
-    ImVec2 audioPlotPos = ImVec2(io_width - ((2 * saveMargin) + audioPlotSize.x), io_height - size.y);
+    ImVec2 audioPlotPos = ImVec2(io_width - (saveMargin + audioPlotSize.x), io_height - size.y - saveMargin);
 
     AudioPlotWindow *audioPlotWindow = new AudioPlotWindow(audioPlotPos, audioPlotSize);
 };
