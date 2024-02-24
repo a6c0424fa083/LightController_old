@@ -1,7 +1,3 @@
-//
-// Created by Jannis Sauer on 13.02.24.
-//
-
 #include "PageWindow.hpp"
 
 void PageWindow::Draw()

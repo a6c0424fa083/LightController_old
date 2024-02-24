@@ -65,6 +65,8 @@ add_executable(
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
         src/API/ArduinoAudioInput/ArduinoAudioInput.cpp
         src/API/ArduinoAudioInput/ArduinoAudioInput.hpp
+        src/frontend/HomeWindow/BPMWindow/BPMWindow.cpp
+        src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
 )
 
 

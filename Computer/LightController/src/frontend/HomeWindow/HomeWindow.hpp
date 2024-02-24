@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp"
+#include "frontend/HomeWindow/BPMWindow/BPMWindow.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
 class HomeWindow : BaseWindow
@@ -26,10 +27,15 @@ private:
     ImVec2 size;
 
     // AudioPlotWindow
-    ImVec2 audioPlotSize = ImVec2(400.0F, 240.0F);
-    ImVec2 audioPlotPos = ImVec2(io_width - (saveMargin + audioPlotSize.x), io_height - size.y - saveMargin);
-
+    ImVec2           audioPlotSize   = ImVec2(400.0F, 240.0F);
+    ImVec2           audioPlotPos    = ImVec2(io_width - (saveMargin + audioPlotSize.x), io_height - size.y - saveMargin);
     AudioPlotWindow *audioPlotWindow = new AudioPlotWindow(audioPlotPos, audioPlotSize);
+
+    // BPMWindow
+    ImVec2 bpmWindowSize = BPMWindow::calcWindowSize();
+    ImVec2 bpmWindowPos =
+        ImVec2(io_width - (saveMargin + audioPlotSize.x + saveMargin + bpmWindowSize.x), io_height - size.y - saveMargin);
+    BPMWindow *bpmWindow = new BPMWindow(bpmWindowPos, bpmWindowSize);
 };
 
 #endif  // HOMEWINDOW_HPP

@@ -14,6 +14,7 @@ void HomeWindow::Draw()
 
 void HomeWindow::DrawContent()
 {
-    ImGui::Text("Hello World!");
+    // ImGui::Text("Hello World!");
     audioPlotWindow->Draw();
+    bpmWindow->Draw();
 }
