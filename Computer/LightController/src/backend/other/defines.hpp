@@ -3,6 +3,8 @@
 
 #include <imgui.h>
 
+#define CLOCKS_PER_SEC_OWN CLOCKS_PER_SEC
+
 #define MASTER_WINDOW_WIDTH  800
 #define MASTER_WINDOW_HEIGHT 480
 
