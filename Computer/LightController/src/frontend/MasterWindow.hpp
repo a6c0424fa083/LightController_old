@@ -21,7 +21,7 @@ public:
 
 private:
     std::vector<std::string> titles     = { "Home", "Patch", "Location", "Effects", "Library", "Settings" };
-    PageWindow              *pageWindow = new PageWindow(ImVec2(0.0F, 0.0F), &titles);
+    PageWindow              *pageWindow = new PageWindow(ImVec2(0.0F, 15.0F), &titles);
     HomeWindow              *homeWindow = nullptr;
 };
 

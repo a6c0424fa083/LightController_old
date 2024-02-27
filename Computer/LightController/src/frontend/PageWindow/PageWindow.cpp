@@ -33,7 +33,7 @@ void PageWindow::DrawContents()
                                         ImGui::GetColorU32(ImGuiCol_TextDisabled),
                                         0.2F);
 
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(borderMargin, pos.y + size.y - borderMargin - 1.0F /*line thickness*/),
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(borderMargin, pos.y + size.y - borderMargin - default_FrameBorderSize),
                                         ImVec2(io_width - borderMargin, pos.y + size.y - borderMargin),
                                         ImGui::GetColorU32(ImGuiCol_TextDisabled),
                                         0.2F);
