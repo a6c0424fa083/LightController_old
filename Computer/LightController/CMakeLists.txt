@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.2.2
+        VERSION 0.3.0
         LANGUAGES C CXX
 )
 
@@ -67,6 +67,10 @@ add_executable(
         src/API/ArduinoAudioInput/ArduinoAudioInput.hpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.cpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
+        src/API/BPM/BPM.cpp
+        src/API/BPM/BPM.hpp
+        src/backend/BPM_/BPM_.cpp
+        src/backend/BPM_/BPM_.hpp
 )
 
 

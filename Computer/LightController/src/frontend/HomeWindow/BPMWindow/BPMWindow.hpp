@@ -3,6 +3,8 @@
 
 #include <imgui.h>
 
+#include "API/BPM/BPM.hpp"
+#include "backend/BPM_/BPM_.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
 class BPMWindow : BaseWindow

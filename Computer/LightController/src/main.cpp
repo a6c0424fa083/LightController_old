@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "backend/BPM_/BPM_.hpp"
+
 
 // graphics libraries include
 #include <imgui.h>
@@ -126,6 +128,8 @@ int main()
     // update windows context
     MasterWindow *masterWindow = new MasterWindow;
 
+    BPM_::createBPMThread();
+
     while (!glfwWindowShouldClose(window))
     {
         start_cycle();
@@ -138,6 +142,8 @@ int main()
 
         end_cycle(window);
     }
+
+    BPM_::joinBPMThread();
 
     // cleanup
     ImGui_ImplOpenGL3_Shutdown();

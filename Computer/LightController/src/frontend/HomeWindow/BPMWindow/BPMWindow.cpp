@@ -4,21 +4,34 @@ void BPMWindow::Draw()
 {
     PUSH_FONT(SUBTITLE)
     setWindowPosSize(pos, size);
-    ImGui::Begin("BPMWindow", nullptr, STATIC__NO_VISUALS);
+    ImGui::BeginChild("BPMWindow", size, true, STATIC__NO_VISUALS);
     DrawContent();
-    ImGui::End();
+    ImGui::EndChild();
     POP_FONT()
 }
 
 void BPMWindow::DrawContent()
 {
+    ImGui::SetCursorPos(ImVec2(size.x - (ImGui::CalcTextSize("BPM").x + (6 * saveMargin)), saveMargin));
+    if (ImGui::Button("BPM", ImVec2(ImGui::CalcTextSize("BPM").x + (5 * saveMargin), ImGui::CalcTextSize("BPM").y + (3 * saveMargin))))
+    {
+        BPM_::setCurrentBeatToNow();
+    }
+
     PUSH_FONT(NUMBER)
     float _halfSizeYNumberFontOffset = (size.y / 2.0F) - (ImGui::CalcTextSize("888.8").y / 2);
-    ImGui::SetCursorPos(ImVec2(saveMargin, _halfSizeYNumberFontOffset));
-    ImGui::Text("121.0");
+    if (BPM::getBPM().size() == 5)
+        ImGui::SetCursorPos(ImVec2(saveMargin, _halfSizeYNumberFontOffset));
+    else if (BPM::getBPM().size() == 4)
+    {
+        ImGui::SetCursorPos(ImVec2(saveMargin + ImGui::CalcTextSize("8").x, _halfSizeYNumberFontOffset));
+    }
+    else
+    {
+        fprintf(stderr, "Invalid BPM string length. Expected 4 or 5, got %zu instead.\n", BPM::getBPM().size());
+    }
+    ImGui::Text("%s", BPM::getBPM().c_str());
     POP_FONT()
-    ImGui::SetCursorPos(ImVec2(size.x - (ImGui::CalcTextSize("BPM").x + (6 * saveMargin)), saveMargin));
-    ImGui::Button("BPM", ImVec2(ImGui::CalcTextSize("BPM").x + (5 * saveMargin), ImGui::CalcTextSize("BPM").y + (3 * saveMargin)));
 }
 
 ImVec2 BPMWindow::calcWindowSize()
