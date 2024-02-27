@@ -38,7 +38,7 @@ bool BPM_::newBeatHandler()
         newBeat = false;
         pthread_mutex_unlock(&mutex);
 
-        duration = currentBeat - lastBeat;
+        durationUS = std::chrono::duration_cast<std::chrono::microseconds>(currentBeat - lastBeat).count();
 
         if (continuousBeats == 0)
         {
@@ -47,31 +47,29 @@ bool BPM_::newBeatHandler()
             return true;
         }
 
-        if (static_cast<double>(duration) / CLOCKS_PER_SEC_OWN > 5.0F)
+        if (durationUS > 5000000)  // 5s
         {
             continuousBeats = 1;
             lastBeat        = currentBeat;
             return true;
         }
 
-        if (continuousBeats == 1) { averageBeatDuration = static_cast<float>(static_cast<double>(duration) / CLOCKS_PER_SEC_OWN); }
+        if (continuousBeats == 1) { averageBeatDurationUS = durationUS; }
 
 
-        if (abs((static_cast<double>(duration) / CLOCKS_PER_SEC_OWN) - averageBeatDuration) < maxBeatOffsetTolerance)
+        if (abs(durationUS - averageBeatDurationUS) < maxBeatOffsetToleranceUS)
         {
-            averageBeatDuration = (averageBeatDuration * static_cast<float>(continuousBeats) +
-                                   static_cast<float>(static_cast<double>(duration) / CLOCKS_PER_SEC_OWN)) /
-                                  (static_cast<float>(continuousBeats) + 1);
+            averageBeatDurationUS = (averageBeatDurationUS * continuousBeats + durationUS) / (continuousBeats + 1);
 
             lastBeat = currentBeat;
 
             if (continuousBeats >= 3)  // to average out small mistakes
             {
-                BPMIntTimesTen = static_cast<uint16_t>((60.0F / averageBeatDuration) * 10.0F);
+                BPMIntTimesHun = static_cast<uint16_t>(6000000000.0 / static_cast<double>(averageBeatDurationUS));
 
-                printf("avg. BPM (x10): %5.1f\n", static_cast<float>(BPMIntTimesTen) / 10.0F);
-                printf("avg. Beat duration: %6.4f\n", averageBeatDuration);
-                printf("curr. Beat duration: %6.4f\n\n", static_cast<float>(static_cast<double>(duration) / CLOCKS_PER_SEC_OWN));
+                printf("avg. BPM: %6.2lf\n", static_cast<double>(BPMIntTimesHun) / 100.0);
+                printf("avg. Beat duration: %6.4lf\n", static_cast<double>(averageBeatDurationUS) / 1000000.0);
+                printf("curr. Beat duration: %6.4lf\n\n", static_cast<double>(durationUS) / 1000000.0);
                 /*
                                 BPM.clear();
                                 if (BPMIntTimesTen >= 10000) { fprintf(stderr, "BPM are to fast!\n"); }
