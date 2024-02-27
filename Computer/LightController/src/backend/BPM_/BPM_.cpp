@@ -120,6 +120,10 @@ bool BPM_::newBeatHandler()
 
                                 std::reverse(BPM.begin(), BPM.end());
                                 BPM::setBPM(BPM);*/
+
+                BPMString.clear();
+                BPMString = floatToString(static_cast<float>(static_cast<double>(BPMIntTimesHun) / 100.0));
+                BPM::setBPM(BPMString);
             }
             continuousBeats++;
         }

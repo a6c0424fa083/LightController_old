@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <iomanip>
 #include <pthread.h>
 #include <sstream>
 #include <string>
@@ -25,8 +26,14 @@ public:
     static void joinBPMThread();
 
 private:
-    static void       *BPMUpdateHandler(void *args);
-    inline static bool newBeatHandler();
+    static void              *BPMUpdateHandler(void *args);
+    inline static bool        newBeatHandler();
+    inline static std::string floatToString(float value)
+    {
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(2) << value;
+        return stream.str();
+    }
 
 private:
     inline static std::chrono::time_point<std::chrono::high_resolution_clock> currentBeat;
@@ -38,11 +45,10 @@ private:
     inline static bool            newBeat         = false;
     inline static uint16_t        continuousBeats = 0;
     inline static long long       averageBeatDurationUS;  // calculate bpm with: 60/avgBeatDur
-    inline static long long       BPMIntTimesHun                   = 0;
-    inline static long long       maxBeatOffsetToleranceUS = 65000;
-    inline static uint8_t         conversionTemp;
-    inline static bool            threadShouldJoin = false;
-    inline static std::string     BPM;
+    inline static long long       BPMIntTimesHun           = 0;
+    inline static long long       maxBeatOffsetToleranceUS = 75000;
+    inline static bool            threadShouldJoin         = false;
+    inline static std::string     BPMString;
 };
 
 #endif  // BPM_HPP_
