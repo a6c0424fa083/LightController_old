@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.3.0
+        VERSION 0.3.1
         LANGUAGES C CXX
 )
 

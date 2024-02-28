@@ -22,11 +22,12 @@ public:
         currentBeat = std::chrono::high_resolution_clock::now();
         newBeat     = true;
     }
-    static void createBPMThread();
-    static void joinBPMThread();
+    static void createBPMThreads();
+    static void joinBPMThreads();
 
 private:
     static void              *BPMUpdateHandler(void *args);
+    static void              *BPMButtonStateUpdater(void *args);
     inline static bool        newBeatHandler();
     inline static std::string floatToString(float value)
     {
@@ -41,14 +42,19 @@ private:
         std::chrono::high_resolution_clock::now();
     inline static long long       durationUS;
     inline static pthread_t       bpmThread;
+    inline static pthread_t       buttonStateThread;
     inline static pthread_mutex_t mutex           = PTHREAD_MUTEX_INITIALIZER;
     inline static bool            newBeat         = false;
     inline static uint16_t        continuousBeats = 0;
     inline static long long       averageBeatDurationUS;  // calculate bpm with: 60/avgBeatDur
     inline static long long       BPMIntTimesHun           = 0;
     inline static long long       maxBeatOffsetToleranceUS = 75000;
-    inline static bool            threadShouldJoin         = false;
+    inline static bool            threadsShouldJoin        = false;
     inline static std::string     BPMString;
+    inline static long long       buttonBlinkDurationUS = 100000;
+    inline static bool            buttonState           = false;
+    inline static std::chrono::time_point<std::chrono::high_resolution_clock> buttonCurrentBeat;
+    inline static long long                                                   buttonBeatDurationUS = 0;
 };
 
 #endif  // BPM_HPP_

@@ -17,7 +17,7 @@ public:
     static ImVec2 calcWindowSize();
 
 private:
-    void DrawContent();
+    void DrawContent() const;
 
 private:
     ImVec2 pos;

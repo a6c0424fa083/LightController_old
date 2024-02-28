@@ -128,7 +128,7 @@ int main()
     // update windows context
     MasterWindow *masterWindow = new MasterWindow;
 
-    BPM_::createBPMThread();
+    BPM_::createBPMThreads();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -143,7 +143,7 @@ int main()
         end_cycle(window);
     }
 
-    BPM_::joinBPMThread();
+    //BPM_::joinBPMThreads();
 
     // cleanup
     ImGui_ImplOpenGL3_Shutdown();
