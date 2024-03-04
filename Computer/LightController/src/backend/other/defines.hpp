@@ -45,4 +45,6 @@ enum USER_FONT
 #define ARIAL_FONT_PATH      "../data/fonts/Arial.ttf"       // relative to executable
 #define ARIALBOLD_FONT_PATH  "../data/fonts/ArialBold.ttf"   // relative to executable
 
+#define BEAT_BUTTON GLFW_KEY_B
+
 #endif  // DEFINES_HPP

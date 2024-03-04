@@ -1,24 +1,38 @@
-#include "BPM_.hpp"
+#include "BPM.hpp"
 
-BPM_::~BPM_()
+BPM::~BPM()
 {
     threadsShouldJoin = true;
     joinBPMThreads();
 }
 
-void BPM_::createBPMThreads()
+void BPM::createBPMThreads(/*GLFWwindow *_window*/)
 {
-    pthread_create(&bpmThread, nullptr, &BPMUpdateHandler, nullptr);
-    pthread_create(&buttonStateThread, nullptr, &BPMButtonStateUpdater, nullptr);
+    //if (_window != nullptr)
+    //{
+        pthread_create(&bpmClickThread, nullptr, &BPMClickUpdateHandler, nullptr);
+        // pthread_create(&bpmKeyThread, nullptr, &BPMKeyUpdateHandler, static_cast<void *>(_window));
+        pthread_create(&buttonStateThread, nullptr, &BPMButtonStateUpdater, nullptr);
+    //}
 }
 
-void BPM_::joinBPMThreads()
+void BPM::joinBPMThreads()
 {
-    while (pthread_join(bpmThread, nullptr) != 0) {}
+    while (pthread_join(bpmClickThread, nullptr) != 0) {}
+    // while (pthread_join(bpmKeyThread, nullptr) != 0) {}
     while (pthread_join(buttonStateThread, nullptr) != 0) {}
 }
-
-void *BPM_::BPMUpdateHandler(void *args)
+/*
+void *BPM_::BPMKeyUpdateHandler(void *args)
+{
+    auto *__window = static_cast<GLFWwindow *>(args);
+    while (!threadsShouldJoin)
+    {
+        if (glfwGetKey(__window, BEAT_BUTTON) == GLFW_PRESS) { setCurrentBeatToNow(); }
+    }
+    return nullptr;
+}*/
+void *BPM::BPMClickUpdateHandler(void *args)
 {
     if (args == nullptr)
     {
@@ -31,7 +45,7 @@ void *BPM_::BPMUpdateHandler(void *args)
     return nullptr;
 }
 
-void *BPM_::BPMButtonStateUpdater(void *args)
+void *BPM::BPMButtonStateUpdater(void *args)
 {
     if (args == nullptr)
     {
@@ -78,7 +92,7 @@ void *BPM_::BPMButtonStateUpdater(void *args)
     return nullptr;
 }
 
-bool BPM_::newBeatHandler()
+bool BPM::newBeatHandler()
 {
     if (newBeat)
     {
@@ -112,7 +126,7 @@ bool BPM_::newBeatHandler()
 
             lastBeat = currentBeat;
 
-            if (continuousBeats >= 3)  // to average out small mistakes
+            if (continuousBeats >= 1)
             {
                 BPMIntTimesHun = static_cast<uint16_t>(6000000000.0 / static_cast<double>(averageBeatDurationUS));
 

@@ -1,10 +1,10 @@
 #ifndef BPMWINDOW_HPP
 #define BPMWINDOW_HPP
 
+#include <GLFW/glfw3.h>
 #include <imgui.h>
 
-#include "API/BPM/BPM.hpp"
-#include "backend/BPM_/BPM_.hpp"
+#include "backend/BPM/BPM.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
 class BPMWindow : BaseWindow

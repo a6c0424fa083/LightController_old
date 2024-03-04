@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.3.1
+        VERSION 0.3.2
         LANGUAGES C CXX
 )
 
@@ -51,26 +51,24 @@ add_executable(
         ${PROJECT_NAME}
         src/main.cpp
         src/backend/other/defines.hpp
+        src/backend/PageSelect/PageSelect.cpp
+        src/backend/PageSelect/PageSelect.hpp
+        src/backend/ArduinoAudioInput/ArduinoAudioInput.cpp
+        src/backend/ArduinoAudioInput/ArduinoAudioInput.hpp
+        src/backend/BPM/BPM.cpp
+        src/backend/BPM/BPM.hpp
         src/frontend/other/BaseWindow/BaseWindow.cpp
         src/frontend/other/BaseWindow/BaseWindow.hpp
         src/frontend/MasterWindow.cpp
         src/frontend/MasterWindow.hpp
-        src/API/PageSelect/PageSelect.cpp
-        src/API/PageSelect/PageSelect.hpp
         src/frontend/PageWindow/PageWindow.cpp
         src/frontend/PageWindow/PageWindow.hpp
         src/frontend/HomeWindow/HomeWindow.cpp
         src/frontend/HomeWindow/HomeWindow.hpp
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.cpp
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
-        src/API/ArduinoAudioInput/ArduinoAudioInput.cpp
-        src/API/ArduinoAudioInput/ArduinoAudioInput.hpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.cpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
-        src/API/BPM/BPM.cpp
-        src/API/BPM/BPM.hpp
-        src/backend/BPM_/BPM_.cpp
-        src/backend/BPM_/BPM_.hpp
 )
 
 

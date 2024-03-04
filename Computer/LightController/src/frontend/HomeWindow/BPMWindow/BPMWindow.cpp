@@ -17,7 +17,7 @@ void BPMWindow::DrawContent() const
     if (ImGui::Button("BPM",
                       ImVec2(ImGui::CalcTextSize("BPM").x + (5 * saveMargin), ImGui::CalcTextSize("BPM").y + (3 * saveMargin))))
     {
-        BPM_::setCurrentBeatToNow();
+        BPM::setCurrentBeatToNow();
     }
     style.FrameBorderSize = default_FrameBorderSize;
 

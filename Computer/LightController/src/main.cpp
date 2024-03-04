@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "backend/BPM_/BPM_.hpp"
+#include "backend/BPM/BPM.hpp"
 
 
 // graphics libraries include
@@ -128,7 +128,7 @@ int main()
     // update windows context
     MasterWindow *masterWindow = new MasterWindow;
 
-    BPM_::createBPMThreads();
+    BPM::createBPMThreads(/*window*/);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -137,13 +137,19 @@ int main()
         ImGui::NewFrame();
         ImPlot::CreateContext();
         masterWindow->Draw(ImVec2(0.0F, 0.0F), ImVec2(io_width, io_height));
+        if (glfwGetKey(window, BEAT_BUTTON) == GLFW_PRESS && !BPM::getKeyPressed())
+        {
+            BPM::setCurrentBeatToNow();
+            BPM::setKeyPressed(true);
+        }
+        if (glfwGetKey(window, BEAT_BUTTON) == GLFW_RELEASE) { BPM::setKeyPressed(false); }
         ImPlot::DestroyContext();
         ImGui::Render();
 
         end_cycle(window);
     }
 
-    //BPM_::joinBPMThreads();
+    // BPM_::joinBPMThreads();
 
     // cleanup
     ImGui_ImplOpenGL3_Shutdown();
