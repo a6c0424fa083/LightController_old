@@ -47,4 +47,6 @@ enum USER_FONT
 
 #define BEAT_BUTTON GLFW_KEY_B
 
+#define ARDUINO_BAUD_RATE 115200
+
 #endif  // DEFINES_HPP

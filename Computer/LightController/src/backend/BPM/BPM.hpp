@@ -17,7 +17,6 @@
 class BPM
 {
 public:
-    ~BPM();
     inline static void setCurrentBeatToNow()
     {
         currentBeat = std::chrono::high_resolution_clock::now();

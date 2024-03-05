@@ -1,11 +1,5 @@
 #include "BPM.hpp"
 
-BPM::~BPM()
-{
-    threadsShouldJoin = true;
-    joinBPMThreads();
-}
-
 void BPM::createBPMThreads(/*GLFWwindow *_window*/)
 {
     //if (_window != nullptr)
@@ -18,6 +12,8 @@ void BPM::createBPMThreads(/*GLFWwindow *_window*/)
 
 void BPM::joinBPMThreads()
 {
+    threadsShouldJoin = true;
+
     while (pthread_join(bpmClickThread, nullptr) != 0) {}
     // while (pthread_join(bpmKeyThread, nullptr) != 0) {}
     while (pthread_join(buttonStateThread, nullptr) != 0) {}

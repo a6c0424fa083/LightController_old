@@ -4,6 +4,7 @@
 #include <string>
 
 #include "backend/BPM/BPM.hpp"
+#include "backend/ArduinoAudioInput/ArduinoAudioInput.hpp"
 
 
 // graphics libraries include
@@ -129,6 +130,7 @@ int main()
     MasterWindow *masterWindow = new MasterWindow;
 
     BPM::createBPMThreads(/*window*/);
+    ArduinoAudioInput::createCommunicationThreads();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -149,7 +151,8 @@ int main()
         end_cycle(window);
     }
 
-    // BPM_::joinBPMThreads();
+     BPM::joinBPMThreads();
+    ArduinoAudioInput::joinCommunicationThreads();
 
     // cleanup
     ImGui_ImplOpenGL3_Shutdown();

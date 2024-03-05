@@ -15,14 +15,14 @@ void AudioPlotWindow::Draw()
 void AudioPlotWindow::DrawContent()
 {
     ImGui::SetCursorPos(ImVec2(0.0F, 0.0F));
-    ImPlot::SetNextAxisLimits(ImAxis_X1, 0.0, static_cast<double>(ArduinoAudioInput::getIntervalSize() - 1));
+    ImPlot::SetNextAxisLimits(ImAxis_X1, 0.0, static_cast<double>(ArduinoAudioInput::getAudioSampleSize() - 1));
     ImPlot::SetNextAxisLimits(ImAxis_Y1, 0.0, 1023.0);
     ImPlot::BeginPlot("AudioPlotGraph",
                       ImVec2(size.x, size.y),
                       ImPlotFlags_NoBoxSelect | ImPlotFlags_NoInputs | ImPlotFlags_NoMouseText | ImPlotFlags_NoTitle |
                           ImPlotFlags_CanvasOnly);
 
-    ImPlot::PlotLine("Left", ArduinoAudioInput::getAudioDataL().data(), static_cast<int>(ArduinoAudioInput::getIntervalSize()));
-    ImPlot::PlotLine("Right", ArduinoAudioInput::getAudioDataR().data(), static_cast<int>(ArduinoAudioInput::getIntervalSize()));
+    ImPlot::PlotLine("Left", ArduinoAudioInput::getAudioData().at(0).data(), static_cast<int>(ArduinoAudioInput::getAudioSampleSize()));
+    ImPlot::PlotLine("Right", ArduinoAudioInput::getAudioData().at(1).data(), static_cast<int>(ArduinoAudioInput::getAudioSampleSize()));
     ImPlot::EndPlot();
 }
