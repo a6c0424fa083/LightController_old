@@ -128,10 +128,10 @@ uint8_t ArduinoAudioInput::receiveAudioData()
             for (size_t i = 0; i < expectedAudioSampleSize; i++)
             {
                 pthread_mutex_lock(&audioDataMutex);
-                audioDataL.at(i) = static_cast<uint16_t>(receivedData.at(4 * i)) |
-                                   static_cast<uint16_t>(receivedData.at(4 * i + 1) << 5);  // big endian
-                audioDataR.at(i) = static_cast<uint16_t>(receivedData.at(4 * i + 2)) |
-                                   static_cast<uint16_t>(receivedData.at(4 * i + 3) << 5);  // big endian
+                audioDataL.at(i) = static_cast<uint16_t>(receivedData.at(4 * i) - 65) |
+                                   static_cast<uint16_t>((receivedData.at(4 * i + 1) - 65) << 5);  // big endian
+                audioDataR.at(i) = static_cast<uint16_t>(receivedData.at(4 * i + 2) - 65) |
+                                   static_cast<uint16_t>((receivedData.at(4 * i + 3) - 65) << 5);  // big endian
                 pthread_mutex_unlock(&audioDataMutex);
             }
         }
