@@ -35,11 +35,11 @@ public:
     static void createCommunicationThreads();
     static void joinCommunicationThreads();
 
-    inline static bool getArduinoConnected() { return arduinoConnected; }
-
 private:
+    static std::vector<uint8_t> audioToStr(std::vector<uint16_t> _audio);
+    static std::vector<uint16_t> strToAudio(std::vector<uint8_t> _str);
     static std::string findSerialPort(std::string &path);
-    static uint8_t     connectSerialConnection();
+    static uint8_t     openSerialConnection();
     static void        closeSerialConnection();
     static void       *communicationThreadHandler(void *args);
     static uint8_t     receiveAudioData();
@@ -56,11 +56,10 @@ private:
     inline static pthread_t                    communicationThread;
     inline static bool                  threadsShouldJoin = false;
     inline static int                   serialConnection  = 0;
-    inline static bool                  arduinoConnected  = false;
     inline static speed_t               baudRate          = B115200;
 
 #if defined(__APPLE__)
-    inline static std::string arduinoPathBegin = "/dev/tty.usbmodem";  // "/dev/cu.usbmodem"
+    inline static std::string arduinoPathBegin = "/dev/cu.usbmodem";  // "/dev/tty.usbmodem"
 #elif defined(__linux__)
     inline static std::string arduinoPathBegin = "/dev/tty.ACM";
 #endif
