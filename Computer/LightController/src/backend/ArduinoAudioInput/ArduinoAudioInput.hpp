@@ -48,7 +48,7 @@ private:
 private:
     inline static size_t                expectedAudioSampleSize = 64;
     inline static std::vector<uint16_t> audioDataL              = std::vector<uint16_t>(expectedAudioSampleSize, 522);
-    inline static std::vector<uint16_t> audioDataR              = std::vector<uint16_t>(expectedAudioSampleSize, 522);
+    inline static std::vector<uint16_t> audioDataR              = std::vector<uint16_t>(expectedAudioSampleSize, 502);
     inline static pthread_mutex_t       audioDataMutex          = PTHREAD_MUTEX_INITIALIZER;
     inline static std::string           receivedData            = std::string("");
     inline static std::vector<uint8_t>  dmxData                 = std::vector<uint8_t>(512, 0);
