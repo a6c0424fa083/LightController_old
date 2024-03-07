@@ -58,6 +58,13 @@ private:
     inline static int                   serialConnection  = 0;
     inline static speed_t               baudRate          = B115200;
 
+    inline static ssize_t bytesRead = 0;
+    inline static uint8_t startByte = 0b01111000;
+    inline static uint8_t endByte   = 0b00110000;
+
+    inline static uint8_t byte[1]            = { startByte };
+    inline static uint8_t flushBuffer[2500] = { 0 };
+
 #if defined(__APPLE__)
     inline static std::string arduinoPathBegin = "/dev/cu.usbmodem";  // "/dev/tty.usbmodem"
 #elif defined(__linux__)
