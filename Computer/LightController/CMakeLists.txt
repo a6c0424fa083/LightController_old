@@ -53,8 +53,8 @@ add_executable(
         src/backend/other/defines.hpp
         src/backend/PageSelect/PageSelect.cpp
         src/backend/PageSelect/PageSelect.hpp
-        src/backend/ArduinoAudioInput/ArduinoAudioInput.cpp
-        src/backend/ArduinoAudioInput/ArduinoAudioInput.hpp
+        src/backend/ArduinoCommunication/ArduinoCommunication.cpp
+        src/backend/ArduinoCommunication/ArduinoCommunication.hpp
         src/backend/BPM/BPM.cpp
         src/backend/BPM/BPM.hpp
         src/frontend/other/BaseWindow/BaseWindow.cpp

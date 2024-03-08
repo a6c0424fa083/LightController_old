@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <vector>
 
-class ArduinoAudioInput
+class ArduinoCommunication
 {
 public:
     inline static size_t getAudioSampleSize() { return expectedAudioSampleSize; }
@@ -19,7 +19,6 @@ public:
     {
         expectedAudioSampleSize = newExpectedAudioSampleSize;
     }
-
     inline static std::vector<std::vector<uint16_t>> getAudioData()
     {
         std::vector<std::vector<uint16_t>> temp;
@@ -31,19 +30,20 @@ public:
 
         return temp;
     }
+    inline static void setDMXShouldMute(bool newState) { dmxShouldMute = newState; }
 
     static void createCommunicationThreads();
     static void joinCommunicationThreads();
 
 private:
-    static std::vector<uint8_t> audioToStr(std::vector<uint16_t> _audio);
+    static std::vector<uint8_t>  audioToStr(std::vector<uint16_t> _audio);
     static std::vector<uint16_t> strToAudio(std::vector<uint8_t> _str);
-    static std::string findSerialPort(std::string &path);
-    static uint8_t     openSerialConnection();
-    static void        closeSerialConnection();
-    static void       *communicationThreadHandler(void *args);
-    static uint8_t     receiveAudioData();
-    static uint8_t     transmitDMXData();
+    static std::string           findSerialPort(std::string &path);
+    static uint8_t               openSerialConnection();
+    static void                  closeSerialConnection();
+    static void                 *communicationThreadHandler(void *args);
+    static uint8_t               receiveAudioData();
+    static uint8_t               transmittDMXData();
 
 private:
     inline static size_t                expectedAudioSampleSize = 64;
@@ -53,16 +53,22 @@ private:
     inline static std::string           receivedData            = std::string("");
     inline static std::vector<uint8_t>  dmxData                 = std::vector<uint8_t>(512, 0);
     inline static pthread_mutex_t       dmxDataMutex            = PTHREAD_MUTEX_INITIALIZER;
-    inline static pthread_t                    communicationThread;
-    inline static bool                  threadsShouldJoin = false;
-    inline static int                   serialConnection  = 0;
-    inline static speed_t               baudRate          = B115200;
+    inline static pthread_t             communicationThread;
+    inline static bool                  threadsShouldJoin  = false;
+    inline static int                   serialConnection   = 0;
+    inline static speed_t               baudRate           = B115200;
+    inline static bool                  isArduinoConnected = false;
 
-    inline static ssize_t bytesRead = 0;
-    inline static uint8_t startByte = 0b01111000;
-    inline static uint8_t endByte   = 0b00110000;
+    inline static ssize_t           bytesRead     = 0;
+    inline static ssize_t           bytesWrote    = 0;
+    inline static const uint8_t     startByte     = 0b01111000;
+    inline static const uint8_t     endByte       = 0b00110000;
+    inline static const char        endOfLine     = '\n';
+    inline static bool              dmxShouldMute = false;
+    inline static const std::string muteMessage   = "MT";
+    inline static const std::string unmuteMessage = "UM";
 
-    inline static uint8_t byte[1]            = { startByte };
+    inline static uint8_t byte[1]           = { startByte };
     inline static uint8_t flushBuffer[2500] = { 0 };
 
 #if defined(__APPLE__)

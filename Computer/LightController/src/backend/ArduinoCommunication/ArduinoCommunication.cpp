@@ -1,17 +1,17 @@
-#include "ArduinoAudioInput.hpp"
+#include "ArduinoCommunication.hpp"
 
-void ArduinoAudioInput::createCommunicationThreads()
+void ArduinoCommunication::createCommunicationThreads()
 {
     pthread_create(&communicationThread, nullptr, &communicationThreadHandler, nullptr);
 }
-void ArduinoAudioInput::joinCommunicationThreads()
+void ArduinoCommunication::joinCommunicationThreads()
 {
     threadsShouldJoin = true;
     while (pthread_join(communicationThread, nullptr) != 0) {}
     // closeSerialConnection();
 }
 
-std::vector<uint8_t> ArduinoAudioInput::audioToStr(std::vector<uint16_t> _audio)
+std::vector<uint8_t> ArduinoCommunication::audioToStr(std::vector<uint16_t> _audio)
 {
     std::vector<uint8_t> _str(4, 0);
 
@@ -23,7 +23,7 @@ std::vector<uint8_t> ArduinoAudioInput::audioToStr(std::vector<uint16_t> _audio)
 
     return _str;
 }
-std::vector<uint16_t> ArduinoAudioInput::strToAudio(std::vector<uint8_t> _str)
+std::vector<uint16_t> ArduinoCommunication::strToAudio(std::vector<uint8_t> _str)
 {
     std::vector<uint16_t> _audio(2, 0);
 
@@ -36,22 +36,24 @@ std::vector<uint16_t> ArduinoAudioInput::strToAudio(std::vector<uint8_t> _str)
     return _audio;
 }
 
-void *ArduinoAudioInput::communicationThreadHandler(void *args)
+void *ArduinoCommunication::communicationThreadHandler(void *args)
 {
     if (args == nullptr)
     {
+        openSerialConnection();
         while (!threadsShouldJoin)
         {
             uint8_t error = receiveAudioData();
 
             if (error != 0) fprintf(stderr, "Error receiving audio data! Error No.: %d\n", error);
         }
+        closeSerialConnection();
     }
 
     return nullptr;
 }
 
-std::string ArduinoAudioInput::findSerialPort(std::string &path)
+std::string ArduinoCommunication::findSerialPort(std::string &path)
 {
     std::string output;
     std::string test;
@@ -62,14 +64,13 @@ std::string ArduinoAudioInput::findSerialPort(std::string &path)
         if (test.find(path) == 0) { output = test; }
     }
 
-    if (!output.empty())
-        printf("Found Arduino at: %s!\n", output.data());
-    else
-        fprintf(stderr, "Could not find Arduino in file system!\n");
+    if (!output.empty()){}
+        //printf("Found Arduino at: %s!\n", output.data());
+    else fprintf(stderr, "Could not find Arduino in file system!\n");
 
     return output;
 }
-uint8_t ArduinoAudioInput::openSerialConnection()
+uint8_t ArduinoCommunication::openSerialConnection()
 {
     std::string path = findSerialPort(arduinoPathBegin);
 
@@ -80,76 +81,122 @@ uint8_t ArduinoAudioInput::openSerialConnection()
         fprintf(stderr, "Error opening serial port. Error No.: %d\n", errno);
         return 255;
     }
+    isArduinoConnected = true;
     return 0;
 }
-void ArduinoAudioInput::closeSerialConnection()
+void ArduinoCommunication::closeSerialConnection()
 {
-    close(serialConnection);
-    printf("Closed connection!\n");
+    if (isArduinoConnected) close(serialConnection);
+    isArduinoConnected = false;
+     printf("Closed connection!\n");
 }
 
-uint8_t ArduinoAudioInput::receiveAudioData()
+uint8_t ArduinoCommunication::receiveAudioData()
 {
-    if (openSerialConnection() == 0)
+    if (!isArduinoConnected) openSerialConnection();
+    if (isArduinoConnected)
     {
-        printf("In receive function! (after connection)\n");
+        // printf("In receive function! (after connection)\n");
         struct termios tty;
         tcgetattr(serialConnection, &tty);
         cfsetospeed(&tty, baudRate);
         cfsetispeed(&tty, baudRate);
         tcsetattr(serialConnection, TCSANOW, &tty);
-        printf("After file Initialization!\n");
+        // printf("After file Initialization!\n");
 
         bytesRead = read(serialConnection, flushBuffer, 2500);
-        printf("Read %zu bytes from buffer!\n", bytesRead);
-        if (bytesRead < 0) fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+         printf("Read %zu bytes from buffer!\n", bytesRead);
+        if (bytesRead < 0)
+        {
+            fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+            closeSerialConnection();
+            return 32;
+        }
+        if (bytesRead == 0)
+        {
+            fprintf(stderr, "Got to end of file without start byte!\n");
+            //  closeSerialConnection();
+            return 128;
+        }
 
         // Reading chars until a start character (with upper timeout limit)
-        for (uint16_t i = 0; i < 2500; i++)
+        for (uint16_t i = 0; i < 1000; i++)
         {
+            // printf("Before read funcit\n");
             bytesRead = read(serialConnection, byte, 1);
+            // printf("After read funcit\n");
 
             if (byte[0] == startByte)
             {
-                printf("Detected start byte '0x%x'\n", byte[0]);
+                 printf("Detected start byte '0x%x'\n", byte[0]);
                 break;
             }
 
             if (bytesRead == 0)
             {
-                printf("Got to ent of file without start byte\n");
-                closeSerialConnection();
+                fprintf(stderr, "Got to end of file without start byte!\n");
+                //  closeSerialConnection();
                 return 128;
             }
-            else if (bytesRead < 0)
-                fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
 
-            usleep(25);
+            if (bytesRead < 0)
+            {
+                fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+                closeSerialConnection();
+                return 32;
+            }
+
+            usleep(2);
+            // printf("Cycle %u in start loop!\n", i);
+            if (i == 999)
+            {
+                 fprintf(stderr, "Arduino connection timeout reached!\n");
+                return 16;
+            }
         }
 
-        usleep(25);
+        usleep(2);
 
         if (!receivedData.empty()) receivedData.clear();
 
         // reading in the audio data (with upper timeout limit)
-        for (uint16_t i = 0; i < 2500; i++)
+        for (uint16_t i = 0; i < 1000; i++)
         {
             bytesRead = read(serialConnection, byte, 1);
 
 
             if (byte[0] == endByte)
             {
-                printf("Detected end byte '0x%x'\n", byte[0]);
+                 printf("Detected end byte '0x%x'\n", byte[0]);
                 break;
             }
             else { receivedData.push_back(static_cast<char>(byte[0])); }
 
-            usleep(25);
+            usleep(2);
 
-            if (bytesRead <= 0) break;
+            if (bytesRead < 0)
+            {
+                fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+                closeSerialConnection();
+                return 32;
+            }
+            if (bytesRead == 0)
+            {
+                 fprintf(stderr, "Got to end of file without start byte!\n");
+                //  closeSerialConnection();
+                return 128;
+            }
+
+            // printf("Cycle %u in end loop!\n", i);
+
+            if (i == 999)
+            {
+                 fprintf(stderr, "Arduino connection timeout reached!\n");
+                return 16;
+            }
         }
 
-        printf("Received data length: %zu!\n", receivedData.length());
+        // printf("Received data length: %zu!\n", receivedData.length());
 
         // convert the raw data to sample points
         if (receivedData.length() == 4 * expectedAudioSampleSize)  // checks if length is even too...
@@ -171,13 +218,13 @@ uint8_t ArduinoAudioInput::receiveAudioData()
                 pthread_mutex_unlock(&audioDataMutex);
             }
 
-            // printf("Data: %s\n", receivedData.data());
+             //printf("Received Data: %s\n", receivedData.data());
 
-            printf("Data: ");
-            for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
-            printf("\n");
+             printf("Received Data: ");
+             for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
+             printf("\n");
 
-            closeSerialConnection();
+            // closeSerialConnection();
             return 0;
         }
         else
@@ -186,13 +233,33 @@ uint8_t ArduinoAudioInput::receiveAudioData()
                     "Invalid sample size! (expected %zu, got %zu instead)\n",
                     4 * expectedAudioSampleSize,
                     receivedData.length());
-            printf("(Data: %s)\n", receivedData.data());
-            closeSerialConnection();
+            // printf("(Data: %s)\n", receivedData.data());
+            //  closeSerialConnection();
             return 64;
         }
-        closeSerialConnection();
+        // closeSerialConnection();
     }
     return 255;
 }
 
-uint8_t ArduinoAudioInput::transmitDMXData() { return 0; }
+uint8_t ArduinoCommunication::transmittDMXData()
+{
+    if (!isArduinoConnected) openSerialConnection();
+
+    // printf("In transmitt function! (after connection)\n");
+    struct termios tty;
+    tcgetattr(serialConnection, &tty);
+    cfsetospeed(&tty, baudRate);
+    cfsetispeed(&tty, baudRate);
+    tcsetattr(serialConnection, TCSANOW, &tty);
+
+    bytesWrote = write(serialConnection, &startByte, 1);
+
+    bytesWrote = write(serialConnection, muteMessage.data(), muteMessage.size());
+
+    bytesWrote = write(serialConnection, &endByte, 1);
+    bytesWrote = write(serialConnection, &endByte, 1);
+    bytesWrote = write(serialConnection, &endOfLine, 1);
+
+    return 0;
+}
