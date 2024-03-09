@@ -45,7 +45,7 @@ void *ArduinoCommunication::communicationThreadHandler(void *args)
         {
             uint8_t error = receiveAudioData();
 
-            if (error != 0) fprintf(stderr, "Error receiving audio data! Error No.: %d\n", error);
+            if (error != 0) fprintf(stderr, "Error receiving audio data!\n");
         }
         closeSerialConnection();
     }
@@ -88,7 +88,7 @@ void ArduinoCommunication::closeSerialConnection()
 {
     if (isArduinoConnected) close(serialConnection);
     isArduinoConnected = false;
-     printf("Closed connection!\n");
+     //printf("Closed connection!\n");
 }
 
 uint8_t ArduinoCommunication::receiveAudioData()
@@ -105,7 +105,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
         // printf("After file Initialization!\n");
 
         bytesRead = read(serialConnection, flushBuffer, 2500);
-         printf("Read %zu bytes from buffer!\n", bytesRead);
+         //printf("Read %zu bytes from buffer!\n", bytesRead);
         if (bytesRead < 0)
         {
             fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
@@ -128,7 +128,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
 
             if (byte[0] == startByte)
             {
-                 printf("Detected start byte '0x%x'\n", byte[0]);
+                 //printf("Detected start byte '0x%x'\n", byte[0]);
                 break;
             }
 
@@ -167,7 +167,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
 
             if (byte[0] == endByte)
             {
-                 printf("Detected end byte '0x%x'\n", byte[0]);
+                 //printf("Detected end byte '0x%x'\n", byte[0]);
                 break;
             }
             else { receivedData.push_back(static_cast<char>(byte[0])); }
@@ -220,9 +220,9 @@ uint8_t ArduinoCommunication::receiveAudioData()
 
              //printf("Received Data: %s\n", receivedData.data());
 
-             printf("Received Data: ");
-             for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
-             printf("\n");
+             //printf("Received Data: ");
+             //for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
+             //printf("\n");
 
             // closeSerialConnection();
             return 0;
@@ -242,7 +242,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
     return 255;
 }
 
-uint8_t ArduinoCommunication::transmittDMXData()
+uint8_t ArduinoCommunication::transmitDMXData()
 {
     if (!isArduinoConnected) openSerialConnection();
 
@@ -255,7 +255,7 @@ uint8_t ArduinoCommunication::transmittDMXData()
 
     bytesWrote = write(serialConnection, &startByte, 1);
 
-    bytesWrote = write(serialConnection, muteMessage.data(), muteMessage.size());
+    bytesWrote = write(serialConnection, dmxValuesStr.data(), dmxValuesStr.size());
 
     bytesWrote = write(serialConnection, &endByte, 1);
     bytesWrote = write(serialConnection, &endByte, 1);

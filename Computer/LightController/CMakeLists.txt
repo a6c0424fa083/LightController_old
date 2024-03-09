@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.25)
 # projects name and version
 project(
         "LightController"
-        VERSION 0.3.3
+        VERSION 0.3.4
         LANGUAGES C CXX
 )
 
@@ -69,6 +69,8 @@ add_executable(
         src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.cpp
         src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
+        src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.cpp
+        src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.hpp
 )
 
 

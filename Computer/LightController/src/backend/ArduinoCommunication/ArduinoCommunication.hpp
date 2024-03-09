@@ -30,7 +30,19 @@ public:
 
         return temp;
     }
-    inline static void setDMXShouldMute(bool newState) { dmxShouldMute = newState; }
+    inline static void setDmxValues(std::vector<uint8_t> &newValues)
+    {
+        if (newValues.size() == dmxChannelCount) {
+            for (uint16_t i = 0; i < dmxChannelCount; i++)
+            {
+                dmxValuesStr.at(2*i) = static_cast<char>((newValues.at(i) & 0b00001111) + 65);
+                dmxValuesStr.at(2*i + 1) = static_cast<char>(((newValues.at(i) >> 4) & 0b00001111) + 65);
+            }
+        }
+        else { fprintf(stderr, "Cannot assign a dmx vector of incorrect length to original!\n"); }
+    }
+
+    inline static uint8_t getDMXChannelCount() { return dmxChannelCount; }
 
     static void createCommunicationThreads();
     static void joinCommunicationThreads();
@@ -43,7 +55,7 @@ private:
     static void                  closeSerialConnection();
     static void                 *communicationThreadHandler(void *args);
     static uint8_t               receiveAudioData();
-    static uint8_t               transmittDMXData();
+    static uint8_t               transmitDMXData();
 
 private:
     inline static size_t                expectedAudioSampleSize = 64;
@@ -59,14 +71,17 @@ private:
     inline static speed_t               baudRate           = B115200;
     inline static bool                  isArduinoConnected = false;
 
-    inline static ssize_t           bytesRead     = 0;
-    inline static ssize_t           bytesWrote    = 0;
-    inline static const uint8_t     startByte     = 0b01111000;
-    inline static const uint8_t     endByte       = 0b00110000;
-    inline static const char        endOfLine     = '\n';
-    inline static bool              dmxShouldMute = false;
-    inline static const std::string muteMessage   = "MT";
-    inline static const std::string unmuteMessage = "UM";
+    inline static ssize_t       bytesRead  = 0;
+    inline static ssize_t       bytesWrote = 0;
+    inline static const uint8_t startByte  = 0b01111000;
+    inline static const uint8_t endByte    = 0b00110000;
+    inline static const char    endOfLine  = '\n';
+    // inline static bool              dmxShouldMute = false;
+    // inline static const std::string muteMessage   = "MT";
+    // inline static const std::string unmuteMessage = "UM";
+
+    inline static uint8_t              dmxChannelCount = 64;
+    inline static std::string dmxValuesStr       = std::string(2 * dmxChannelCount, 0);
 
     inline static uint8_t byte[1]           = { startByte };
     inline static uint8_t flushBuffer[2500] = { 0 };
