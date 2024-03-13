@@ -146,7 +146,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
                 return 32;
             }
 
-            usleep(2);
+            usleep(15);
             // printf("Cycle %u in start loop!\n", i);
             if (i == 999)
             {
@@ -155,7 +155,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
             }
         }
 
-        usleep(2);
+        usleep(15);
 
         if (!receivedData.empty()) receivedData.clear();
 
@@ -172,7 +172,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
             }
             else { receivedData.push_back(static_cast<char>(byte[0])); }
 
-            usleep(2);
+            usleep(15);
 
             if (bytesRead < 0)
             {
