@@ -77,10 +77,21 @@ add_executable(
 # define srcs directory as part of the project
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 
-target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/imgui)
-target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/imgui/backends)
-target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/implot)
-target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/glfw/include)
+add_library(imgui PUBLIC)
+target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalLibraries/imgui)
+target_link_libraries(imgui PRIVATE ${PROJECT_NAME})
+
+add_library(imgui_backend PUBLIC)
+target_include_directories(imgui_backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalLibraries/imgui/backends)
+target_link_libraries(imgui_backend PRIVATE ${PROJECT_NAME})
+
+add_library(implot PUBLIC)
+target_include_directories(implot PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalLibraries/implot)
+target_link_libraries(implot PRIVATE ${PROJECT_NAME})
+
+add_library(glfw PUBLIC)
+target_include_directories(glfw PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/externalLibraries/glfw/include)
+target_link_libraries(glfw PRIVATE ${PROJECT_NAME})
 
 
 # add compile definitions
