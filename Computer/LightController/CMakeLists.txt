@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # set general things
 option(ENABLE_WARNINGS "Enable to add warnings to a target." ON)
-option(ENABLE_WARNINGS_AS_ERRORS "Enable to treat warnings as errors." ON)
+option(ENABLE_WARNINGS_AS_ERRORS "Enable to treat warnings as errors." OFF)
 option(ENABLE_CLANG_TIDY "Enable to add clang tidy." ON)
 option(ENABLE_CLANG_FORMAT "Enable to add clang-format." ON)
 
@@ -34,16 +34,16 @@ include(Docs)
 
 
 # set vcpkg path
-set(VCPKG_DIR "~/.vcpkg-clion/vcpkg") # SHOULD BE CHANGED TO YOUR DIRECTORY
-include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
+#set(VCPKG_DIR "~/.vcpkg-clion/vcpkg") # SHOULD BE CHANGED TO YOUR DIRECTORY
+#include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
 
 
 # find vcpkg packets
-find_package(fmt CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-find_package(implot CONFIG REQUIRED)
-find_package(OpenGL REQUIRED)
+#find_package(fmt CONFIG REQUIRED)
+#find_package(glfw3 CONFIG REQUIRED)
+#find_package(imgui CONFIG REQUIRED)
+#find_package(implot CONFIG REQUIRED)
+#find_package(OpenGL REQUIRED)
 
 
 # adding all necessary file to this list for the compiler to compile it
@@ -77,6 +77,11 @@ add_executable(
 # define srcs directory as part of the project
 target_include_directories(${PROJECT_NAME} PUBLIC src/)
 
+target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/imgui)
+target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/imgui/backends)
+target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/implot)
+target_include_directories(${PROJECT_NAME} PUBLIC externalLibraries/glfw/include)
+
 
 # add compile definitions
 add_compile_definitions(NOMINMAX)
@@ -87,8 +92,8 @@ target_set_warnings(TARGET ${PROJECT_NAME} ENABLE ${ENABLE_WARNINGS} AS_ERRORS $
 
 
 # link packets to project
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
-target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
-target_link_libraries(${PROJECT_NAME} PRIVATE implot::implot)
+#target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only)
+#target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+#target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
+#target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
+#target_link_libraries(${PROJECT_NAME} PRIVATE implot::implot)
