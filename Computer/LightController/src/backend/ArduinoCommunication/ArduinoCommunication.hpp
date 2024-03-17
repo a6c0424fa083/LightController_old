@@ -32,11 +32,13 @@ public:
     }
     inline static void setDmxValues(std::vector<uint8_t> &newValues)
     {
-        if (newValues.size() == dmxChannelCount) {
+        if (newValues.size() == dmxChannelCount)
+        {
+            dmxData = newValues;
             for (uint16_t i = 0; i < dmxChannelCount; i++)
             {
-                dmxValuesStr.at(2*i) = static_cast<char>((newValues.at(i) & 0b00001111) + 65);
-                dmxValuesStr.at(2*i + 1) = static_cast<char>(((newValues.at(i) >> 4) & 0b00001111) + 65);
+                dmxValuesStr.at(2 * i)     = static_cast<char>((newValues.at(i) & 0b00001111) + 65);
+                dmxValuesStr.at(2 * i + 1) = static_cast<char>(((newValues.at(i) >> 4) & 0b00001111) + 65);
             }
         }
         else { fprintf(stderr, "Cannot assign a dmx vector of incorrect length to original!\n"); }
@@ -51,11 +53,149 @@ private:
     static std::vector<uint8_t>  audioToStr(std::vector<uint16_t> _audio);
     static std::vector<uint16_t> strToAudio(std::vector<uint8_t> _str);
     static std::string           findSerialPort(std::string &path);
-    static uint8_t               openSerialConnection();
-    static void                  closeSerialConnection();
-    static void                 *communicationThreadHandler(void *args);
-    static uint8_t               receiveAudioData();
-    static uint8_t               transmitDMXData();
+    inline static void           setupUARTParameters()
+    {
+        // Set serial port parameters
+        struct termios options;
+        tcgetattr(serialConnection, &options);
+        cfsetospeed(&options, baudRate);
+        cfsetispeed(&options, baudRate);
+
+        options.c_cflag |= (CLOCAL | CREAD);                // Enable receiver and set local mode
+        options.c_cflag &= static_cast<tcflag_t>(~PARENB);  // No parity
+        options.c_cflag &= static_cast<tcflag_t>(~CSTOPB);  // 1 stop bit
+        options.c_cflag &= static_cast<tcflag_t>(~CSIZE);   // Mask character size bits
+        options.c_cflag |= CS8;                             // 8 data bits
+        tcsetattr(serialConnection, TCSANOW, &options);
+    }
+    inline static uint8_t readBuffer()
+    {
+        bytesRead = read(serialConnection, flushBuffer, 2500);
+
+        if (bytesRead < 0)
+        {
+            fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+            closeSerialConnection();
+            return 32;
+        }
+        if (bytesRead == 0)
+        {
+            fprintf(stderr, "Got to end of file without start byte!\n");
+            //  closeSerialConnection();
+            return 128;
+        }
+        return 0;
+    }
+    inline static uint8_t readUntilStartByte()
+    {
+        // Reading chars until a start character (with upper timeout limit)
+        for (uint16_t i = 0; i < 1000; i++)
+        {
+            bytesRead = read(serialConnection, byte, 1);
+
+            if (byte[0] == startByte) break;
+
+            if (bytesRead == 0)
+            {
+                fprintf(stderr, "Got to end of file without start byte!\n");
+                return 128;
+            }
+
+            if (bytesRead < 0)
+            {
+                fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+                closeSerialConnection();
+                return 32;
+            }
+
+            usleep(15);
+
+            if (i == 999)
+            {
+                fprintf(stderr, "Arduino connection timeout reached!\n");
+                return 16;
+            }
+        }
+        return 0;
+    }
+    inline static uint8_t readAudioData()
+    {
+        if (!receivedData.empty()) receivedData.clear();
+
+        // reading in the audio data (with upper timeout limit)
+        for (uint16_t i = 0; i < 1000; i++)
+        {
+            bytesRead = read(serialConnection, byte, 1);
+
+
+            if (byte[0] == endByte)
+                break;
+            else
+                receivedData.push_back(static_cast<char>(byte[0]));
+
+            usleep(15);
+
+            if (bytesRead < 0)
+            {
+                fprintf(stderr, "Could not open arduino serial file! Error No.: %d\n", errno);
+                closeSerialConnection();
+                return 32;
+            }
+            if (bytesRead == 0)
+            {
+                fprintf(stderr, "Got to end of file without start byte!\n");
+
+                return 128;
+            }
+
+            if (i == 999)
+            {
+                fprintf(stderr, "Arduino connection timeout reached!\n");
+                return 16;
+            }
+        }
+        return 0;
+    }
+    inline static uint8_t convertAudioData()
+    {
+        // convert the raw data to sample points
+        if (receivedData.length() == 4 * expectedAudioSampleSize)  // checks if length is even too...
+        {
+            for (size_t i = 0; i < expectedAudioSampleSize; i++)
+            {
+                std::vector<uint8_t> tempIn;
+                tempIn.push_back(static_cast<uint8_t>(receivedData.at(4 * i)));
+                tempIn.push_back(static_cast<uint8_t>(receivedData.at(4 * i + 1)));
+                tempIn.push_back(static_cast<uint8_t>(receivedData.at(4 * i + 2)));
+                tempIn.push_back(static_cast<uint8_t>(receivedData.at(4 * i + 3)));
+
+                std::vector<uint16_t> tempOut;
+                tempOut = strToAudio(tempIn);
+
+                pthread_mutex_lock(&audioDataMutex);
+                audioDataL.at(i) = tempOut.at(0);
+                audioDataR.at(i) = tempOut.at(1);
+                pthread_mutex_unlock(&audioDataMutex);
+            }
+            //printf("Received Data: ");
+            //for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
+            //printf("\n");
+            return 0;
+        }
+        else
+        {
+            fprintf(stderr,
+                    "Invalid sample size! (expected %zu, got %zu instead)\n",
+                    4 * expectedAudioSampleSize,
+                    receivedData.length());
+            return 64;
+        }
+    }
+    static uint8_t openSerialConnection();
+    static void    closeSerialConnection();
+    static void   *communicationThreadHandler(void *args);
+    static uint8_t receiveAudioData();
+    static uint8_t transmitDMXData();
 
 private:
     inline static size_t                expectedAudioSampleSize = 64;
@@ -80,8 +220,8 @@ private:
     // inline static const std::string muteMessage   = "MT";
     // inline static const std::string unmuteMessage = "UM";
 
-    inline static uint8_t              dmxChannelCount = 64;
-    inline static std::string dmxValuesStr       = std::string(2 * dmxChannelCount, 0);
+    inline static uint8_t     dmxChannelCount = 64;
+    inline static std::string dmxValuesStr    = std::string(2 * dmxChannelCount, 0);
 
     inline static uint8_t byte[1]           = { startByte };
     inline static uint8_t flushBuffer[2500] = { 0 };
