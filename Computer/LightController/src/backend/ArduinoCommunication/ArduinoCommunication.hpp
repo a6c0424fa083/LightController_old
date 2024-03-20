@@ -71,7 +71,7 @@ private:
     }
     inline static uint8_t readBuffer()
     {
-        bytesRead = read(serialConnection, flushBuffer, 2500);
+        bytesRead = read(serialConnection, flushBuffer, flushBufferSize);
 
         if (bytesRead < 0)
         {
@@ -303,7 +303,8 @@ private:
     inline static std::string dmxValuesStr    = std::string(2 * dmxChannelCount, 'A');
 
     inline static uint8_t byte[1]           = { startByte };
-    inline static uint8_t flushBuffer[2500] = { 0 };
+    inline static const uint16_t flushBufferSize = 2500;
+    inline static uint8_t flushBuffer[flushBufferSize] = { 0 };
 
 #if defined(__APPLE__)
     inline static std::string arduinoPathBegin = "/dev/cu.usbmodem";  // "/dev/tty.usbmodem"
