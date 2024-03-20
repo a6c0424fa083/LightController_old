@@ -45,6 +45,21 @@ find_package(imgui CONFIG REQUIRED)
 find_package(implot CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 
+# include external libraries
+include_directories(externalLibraries/serial/include)
+
+add_library(serial STATIC
+        externalLibraries/serial/include/serial/serial.h
+        externalLibraries/serial/include/serial/v8stdint.h
+        externalLibraries/serial/include/serial/impl/unix.h
+        externalLibraries/serial/include/serial/impl/win.h
+        externalLibraries/serial/src/serial.cc
+        externalLibraries/serial/src/impl/unix.cc
+        externalLibraries/serial/src/impl/win.cc
+        externalLibraries/serial/src/impl/list_ports/list_ports_linux.cc
+        externalLibraries/serial/src/impl/list_ports/list_ports_osx.cc
+        externalLibraries/serial/src/impl/list_ports/list_ports_win.cc)
+
 
 # adding all necessary file to this list for the compiler to compile it
 add_executable(
@@ -92,3 +107,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui)
 target_link_libraries(${PROJECT_NAME} PRIVATE implot::implot)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE serial)
