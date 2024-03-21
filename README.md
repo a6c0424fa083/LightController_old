@@ -1,5 +1,5 @@
 # LightController
-An Arduino and Raspberry Pi based DMX light controller with focus on cheap but yet effective production
+An Arduino and Raspberry Pi based DMX light controller with focus on cheap but yet effective production.
 
 ## How to build from sorce
 - install vcpkg (if not present) via ```git clone https://github.com/Microsoft/vcpkg.git``` in any directory you like
