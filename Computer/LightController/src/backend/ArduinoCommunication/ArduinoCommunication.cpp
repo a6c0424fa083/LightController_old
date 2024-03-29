@@ -37,7 +37,6 @@ void *ArduinoCommunication::communicationThreadHandler(void *args)
             if (!isArduinoConnected)
             {
                 path = findSerialPort(arduinoPathBegin);
-
                 if (!path.empty())
                 {
                     auto *serialConnectionTemp =
@@ -49,7 +48,7 @@ void *ArduinoCommunication::communicationThreadHandler(void *args)
                 }
             }
             receiveAudioData();
-            transmitDMXData();
+            //transmitDMXData();
         }
     }
 

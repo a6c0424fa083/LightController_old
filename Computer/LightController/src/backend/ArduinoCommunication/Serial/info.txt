@@ -1,0 +1,4 @@
+The Serial.h and Serial.cpp files are inspired - partly heavily inspired (copy and pasted with some minor changes e.g. fprintf instead of exceptions) - by the
+https://github.com/wjwwood/serial repository.
+
+Hereby, a copyright notice from said repository is found under LICENCE.

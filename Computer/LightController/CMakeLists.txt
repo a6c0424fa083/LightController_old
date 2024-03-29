@@ -86,8 +86,8 @@ add_executable(
         src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
         src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.cpp
         src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.hpp
-        src/backend/ArduinoCommunication/Serial/Serial.cpp
-        src/backend/ArduinoCommunication/Serial/Serial.hpp
+        #src/backend/ArduinoCommunication/Serial/Serial.cpp
+        #src/backend/ArduinoCommunication/Serial/Serial.hpp
 )
 
 
