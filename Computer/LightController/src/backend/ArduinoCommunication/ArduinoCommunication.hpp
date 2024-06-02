@@ -24,8 +24,8 @@ public:
         std::vector<std::vector<uint16_t>> temp;
 
         pthread_mutex_lock(&audioDataMutex);
-        temp.push_back(audioDataL2); // replace with original later
-        temp.push_back(audioDataR2); // replace with original later
+        temp.push_back(audioDataL2);  // replace with original later
+        temp.push_back(audioDataR2);  // replace with original later
         pthread_mutex_unlock(&audioDataMutex);
 
         return temp;
@@ -54,20 +54,55 @@ private:
     static std::vector<uint16_t> strToAudio(std::vector<uint8_t> _str);
     static std::vector<uint16_t> strToAudio2(std::vector<uint8_t> _str);
     static std::string           findSerialPort(std::string &path);
-    inline static void           setupUARTParameters()
+    inline static uint8_t        setupUARTParameters(const int *fd)
     {
-        // Set serial port parameters
-        struct termios options;
-        tcgetattr(serialConnection, &options);
-        cfsetospeed(&options, baudRate);
-        cfsetispeed(&options, baudRate);
+        termios tty {};
 
-        options.c_cflag |= (CLOCAL | CREAD);                // Enable receiver and set local mode
-        options.c_cflag &= static_cast<tcflag_t>(~PARENB);  // No parity
-        options.c_cflag &= static_cast<tcflag_t>(~CSTOPB);  // 1 stop bit
-        options.c_cflag &= static_cast<tcflag_t>(~CSIZE);   // Mask character size bits
-        options.c_cflag |= CS8;                             // 8 data bits
-        tcsetattr(serialConnection, TCSANOW, &options);
+        // Read in existing settings, and handle any error
+        if (tcgetattr(*fd, &tty) != 0)
+        {
+            std::cerr << "Error from tcgetattr: " << strerror(errno) << std::endl;
+            return 1;
+        }
+
+        // Set Baud Rate
+        cfsetospeed(&tty, B115200);
+        cfsetispeed(&tty, B115200);
+
+        // Setting other Port Stuff
+        tty.c_cflag &= static_cast<tcflag_t>(~PARENB);  // Make 8n1
+        tty.c_cflag &= static_cast<tcflag_t>(~CSTOPB);
+        tty.c_cflag &= static_cast<tcflag_t>(~CSIZE);
+        tty.c_cflag |= CS8;
+
+        tty.c_cflag &= static_cast<tcflag_t>(~CRTSCTS);        // No flow control
+        tty.c_cflag |= CREAD | CLOCAL;  // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+
+        tty.c_lflag &= static_cast<tcflag_t>(~ICANON);
+        tty.c_lflag &= static_cast<tcflag_t>(~ECHO);   // Disable echo
+        tty.c_lflag &= static_cast<tcflag_t>(~ECHOE);  // Disable erasure
+        tty.c_lflag &= static_cast<tcflag_t>(~ECHONL);
+        tty.c_lflag &= static_cast<tcflag_t>(~ISIG);  // Disable interpretation of INTR, QUIT and SUSP
+
+        tty.c_iflag &= static_cast<tcflag_t>(~(IXON | IXOFF | IXANY));  // Turn off s/w flow ctrl
+        tty.c_iflag &= static_cast<tcflag_t>(~(IGNBRK | BRKINT | ICRNL | INLCR | PARMRK | INPCK | ISTRIP | IXON));
+
+        tty.c_oflag &= static_cast<tcflag_t>(~OPOST);  // Prevent special interpretation of output bytes (e.g. newline chars)
+        tty.c_oflag &= static_cast<tcflag_t>(~ONLCR);  // Prevent conversion of newline to carriage return/line feed
+
+        // Setting Timeouts
+        tty.c_cc[VTIME] = 10;  // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+        tty.c_cc[VMIN]  = 0;
+
+        tcflush(*fd, TCIOFLUSH);
+
+        // Save tty settings, also checking for error
+        if (tcsetattr(*fd, TCSANOW, &tty) != 0)
+        {
+            std::cerr << "Error from tcsetattr: " << strerror(errno) << std::endl;
+            return 1;
+        }
+        return 0;
     }
     inline static uint8_t readBuffer()
     {
@@ -216,9 +251,9 @@ private:
                 audioDataR.at(i) = tempOut.at(1);
                 pthread_mutex_unlock(&audioDataMutex);
             }
-            //printf("Received Data: ");
-            //for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
-            //printf("\n");
+            // printf("Received Data: ");
+            // for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
+            // printf("\n");
             return 0;
         }
         else
@@ -229,7 +264,6 @@ private:
                     receivedData.length());
             return 64;
         }
-
     }
     inline static uint8_t convertAudioData2()
     {
@@ -251,9 +285,9 @@ private:
                 audioDataR2.at(i) = tempOut2.at(1);
                 pthread_mutex_unlock(&audioDataMutex);
             }
-            //printf("Received Data: ");
-            //for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
-            //printf("\n");
+            // printf("Received Data: ");
+            // for (size_t i = 0; i < receivedData.length(); i++) { printf("%c", receivedData.at(i)); }
+            // printf("\n");
             return 0;
         }
         else
@@ -264,7 +298,6 @@ private:
                     receivedData2.length());
             return 64;
         }
-
     }
     static uint8_t openSerialConnection();
     static void    closeSerialConnection();
@@ -273,17 +306,17 @@ private:
     static uint8_t transmitDMXData();
 
 private:
-    inline static size_t                expectedAudioSampleSize = 64;
-    inline static size_t                expectedAudioSampleSize2 = 64; // MUST BE EVEN
-    inline static std::vector<uint16_t> audioDataL              = std::vector<uint16_t>(expectedAudioSampleSize, 522);
-    inline static std::vector<uint16_t> audioDataR              = std::vector<uint16_t>(expectedAudioSampleSize, 502);
-    inline static pthread_mutex_t       audioDataMutex          = PTHREAD_MUTEX_INITIALIZER;
+    inline static size_t                expectedAudioSampleSize  = 64;
+    inline static size_t                expectedAudioSampleSize2 = 64;  // MUST BE EVEN
+    inline static std::vector<uint16_t> audioDataL               = std::vector<uint16_t>(expectedAudioSampleSize, 522);
+    inline static std::vector<uint16_t> audioDataR               = std::vector<uint16_t>(expectedAudioSampleSize, 502);
+    inline static pthread_mutex_t       audioDataMutex           = PTHREAD_MUTEX_INITIALIZER;
     inline static std::vector<uint16_t> audioDataL2              = std::vector<uint16_t>(expectedAudioSampleSize, 522);
     inline static std::vector<uint16_t> audioDataR2              = std::vector<uint16_t>(expectedAudioSampleSize, 502);
-    inline static std::string           receivedData            = std::string("");
+    inline static std::string           receivedData             = std::string("");
     inline static std::string           receivedData2            = std::string("");
-    inline static std::vector<uint8_t>  dmxData                 = std::vector<uint8_t>(512, 0);
-    inline static pthread_mutex_t       dmxDataMutex            = PTHREAD_MUTEX_INITIALIZER;
+    inline static std::vector<uint8_t>  dmxData                  = std::vector<uint8_t>(512, 0);
+    inline static pthread_mutex_t       dmxDataMutex             = PTHREAD_MUTEX_INITIALIZER;
     inline static pthread_t             communicationThread;
     inline static bool                  threadsShouldJoin  = false;
     inline static int                   serialConnection   = 0;
@@ -299,12 +332,12 @@ private:
     // inline static const std::string muteMessage   = "MT";
     // inline static const std::string unmuteMessage = "UM";
 
-    inline static uint16_t     dmxChannelCount = 512;
+    inline static uint16_t    dmxChannelCount = 512;
     inline static std::string dmxValuesStr    = std::string(2 * dmxChannelCount, 'A');
 
-    inline static uint8_t byte[1]           = { startByte };
-    inline static const uint16_t flushBufferSize = 2500;
-    inline static uint8_t flushBuffer[flushBufferSize] = { 0 };
+    inline static uint8_t        byte[1]                      = { startByte };
+    inline static const uint16_t flushBufferSize              = 2500;
+    inline static uint8_t        flushBuffer[flushBufferSize] = { 0 };
 
 #if defined(__APPLE__)
     inline static std::string arduinoPathBegin = "/dev/cu.usbmodem";  // "/dev/tty.usbmodem"

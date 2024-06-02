@@ -62,7 +62,7 @@ void *ArduinoCommunication::communicationThreadHandler(void *args)
         openSerialConnection();
         while (!threadsShouldJoin)
         {
-            /*error = */  // receiveAudioData();
+            /*error = */   //receiveAudioData();
             // if (error != 0) fprintf(stderr, "Error receiving audio data! (Internal error: %d)\n", error);
 
             /*error = */ transmitDMXData();
@@ -98,9 +98,9 @@ uint8_t ArduinoCommunication::openSerialConnection()
     std::string path = findSerialPort(arduinoPathBegin);
 
     // Open the serial port
-    serialConnection = open(path.c_str(), O_RDWR /* | O_NOCTTY | O_NDELAY*/);
+    serialConnection = open(path.c_str(), O_RDWR /* | O_NOCTTY | O_NDELAY */);
 
-    setupUARTParameters();
+    setupUARTParameters(&serialConnection);
 
 
     if (serialConnection < 0)
