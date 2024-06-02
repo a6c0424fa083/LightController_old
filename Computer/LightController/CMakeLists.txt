@@ -34,7 +34,7 @@ include(Docs)
 
 
 # set vcpkg path
-set(VCPKG_DIR "~/.vcpkg-clion/vcpkg") # SHOULD BE CHANGED TO YOUR DIRECTORY
+set(VCPKG_DIR "~/Documents/.vcpkg-clion/vcpkg") # SHOULD BE CHANGED TO YOUR DIRECTORY
 include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
 
 
