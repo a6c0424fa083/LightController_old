@@ -2,17 +2,19 @@
 cmake_minimum_required(VERSION 3.25)
 
 
+# set cmake standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_OSX_ARCHITECTURES arm64)
+#set(CMAKE_OSX_ARCHITECTURES x86_64)
+
+
 # projects name and version
 project(
         "LightController"
         VERSION 0.3.4
         LANGUAGES C CXX
 )
-
-
-# set cmake standard
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # set general things

@@ -95,6 +95,8 @@ std::string ArduinoCommunication::findSerialPort(std::string &path)
 
 uint8_t ArduinoCommunication::openSerialConnection()
 {
+    if (isArduinoConnected)
+        return 0;
     std::string path = findSerialPort(arduinoPathBegin);
 
     // Open the serial port
@@ -124,9 +126,7 @@ uint8_t ArduinoCommunication::receiveAudioData()
     if (!isArduinoConnected) openSerialConnection();
     if (isArduinoConnected)
     {
-        uint8_t ret;
-
-        ret = readBuffer();
+        uint8_t ret = readBuffer();
         if (ret != 0) return ret;
 
         ret = readUntilStartByte();
