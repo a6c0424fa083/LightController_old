@@ -48,31 +48,36 @@ find_package(implot CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 
 
+# set file shortcuts
+set(BACKEND_PATH "src/backend")
+set(FRONTEND_PATH "src/frontend")
+
+
 # adding all necessary file to this list for the compiler to compile it
 add_executable(
         ${PROJECT_NAME}
         src/main.cpp
-        src/backend/other/defines.hpp
-        src/backend/PageSelect/PageSelect.cpp
-        src/backend/PageSelect/PageSelect.hpp
-        src/backend/ArduinoCommunication/ArduinoCommunication.cpp
-        src/backend/ArduinoCommunication/ArduinoCommunication.hpp
-        src/backend/BPM/BPM.cpp
-        src/backend/BPM/BPM.hpp
-        src/frontend/other/BaseWindow/BaseWindow.cpp
-        src/frontend/other/BaseWindow/BaseWindow.hpp
-        src/frontend/MasterWindow.cpp
-        src/frontend/MasterWindow.hpp
-        src/frontend/PageWindow/PageWindow.cpp
-        src/frontend/PageWindow/PageWindow.hpp
-        src/frontend/HomeWindow/HomeWindow.cpp
-        src/frontend/HomeWindow/HomeWindow.hpp
-        src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.cpp
-        src/frontend/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
-        src/frontend/HomeWindow/BPMWindow/BPMWindow.cpp
-        src/frontend/HomeWindow/BPMWindow/BPMWindow.hpp
-        src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.cpp
-        src/frontend/HomeWindow/QuickControlWindow/QuickControlWindow.hpp
+        ${BACKEND_PATH}/other/defines.hpp
+        ${BACKEND_PATH}/PageSelect/PageSelect.cpp
+        ${BACKEND_PATH}/PageSelect/PageSelect.hpp
+        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication.cpp
+        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication.hpp
+        ${BACKEND_PATH}/BPM/BPM.cpp
+        ${BACKEND_PATH}/BPM/BPM.hpp
+        ${FRONTEND_PATH}/other/BaseWindow/BaseWindow.cpp
+        ${FRONTEND_PATH}/other/BaseWindow/BaseWindow.hpp
+        ${FRONTEND_PATH}/MasterWindow.cpp
+        ${FRONTEND_PATH}/MasterWindow.hpp
+        ${FRONTEND_PATH}/PageWindow/PageWindow.cpp
+        ${FRONTEND_PATH}/PageWindow/PageWindow.hpp
+        ${FRONTEND_PATH}/HomeWindow/HomeWindow.cpp
+        ${FRONTEND_PATH}/HomeWindow/HomeWindow.hpp
+        ${FRONTEND_PATH}/HomeWindow/AudioPlotWindow/AudioPlotWindow.cpp
+        ${FRONTEND_PATH}/HomeWindow/AudioPlotWindow/AudioPlotWindow.hpp
+        ${FRONTEND_PATH}/HomeWindow/BPMWindow/BPMWindow.cpp
+        ${FRONTEND_PATH}/HomeWindow/BPMWindow/BPMWindow.hpp
+        ${FRONTEND_PATH}/HomeWindow/QuickControlWindow/QuickControlWindow.cpp
+        ${FRONTEND_PATH}/HomeWindow/QuickControlWindow/QuickControlWindow.hpp
 )
 
 
