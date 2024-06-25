@@ -1,3 +1,4 @@
+/*
 #ifndef ARDUINOAUDIOINPUT_HPP
 #define ARDUINOAUDIOINPUT_HPP
 
@@ -346,4 +347,4 @@ private:
 #endif
 };
 
-#endif  // ARDUINOAUDIOINPUT_HPP
+#endif  // ARDUINOAUDIOINPUT_HPP*/

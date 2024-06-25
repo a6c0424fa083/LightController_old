@@ -60,8 +60,8 @@ add_executable(
         ${BACKEND_PATH}/other/defines.hpp
         ${BACKEND_PATH}/PageSelect/PageSelect.cpp
         ${BACKEND_PATH}/PageSelect/PageSelect.hpp
-        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication.cpp
-        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication.hpp
+        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication2.cpp
+        ${BACKEND_PATH}/ArduinoCommunication/ArduinoCommunication2.hpp
         ${BACKEND_PATH}/BPM/BPM.cpp
         ${BACKEND_PATH}/BPM/BPM.hpp
         ${FRONTEND_PATH}/other/BaseWindow/BaseWindow.cpp

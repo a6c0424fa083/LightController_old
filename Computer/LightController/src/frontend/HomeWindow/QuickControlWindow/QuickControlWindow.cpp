@@ -20,7 +20,8 @@ void QuickControlWindow::DrawContent()
                       ImVec2(ImGui::CalcTextSize("Black").x + 5 * saveMargin, ImGui::CalcTextSize("Black").y + 3 * saveMargin)))
     {
         dmxValues = std::vector<uint8_t>(ArduinoCommunication::getDMXChannelCount(), 0);
-        ArduinoCommunication::setDmxValues(dmxValues);
+        ArduinoCommunication::writeDMX(1, dmxValues);
+        printf("\nChanged DMX to 0\n");
     }
 
     ImGui::SetCursorPos(ImVec2(ImGui::CalcTextSize("Black").x + 7 * saveMargin, saveMargin));
@@ -28,7 +29,8 @@ void QuickControlWindow::DrawContent()
                       ImVec2(ImGui::CalcTextSize("White").x + 5 * saveMargin, ImGui::CalcTextSize("White").y + 3 * saveMargin)))
     {
         dmxValues = std::vector<uint8_t>(ArduinoCommunication::getDMXChannelCount(), 255);
-        ArduinoCommunication::setDmxValues(dmxValues);
+        ArduinoCommunication::writeDMX(1, dmxValues);
+        printf("\nChanged DMX to 255\n");
     }
 }
 

@@ -4,7 +4,7 @@
 #include <imgui.h>
 
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
-#include "backend/ArduinoCommunication/ArduinoCommunication.hpp"
+#include "backend/ArduinoCommunication/ArduinoCommunication2.hpp"
 
 class QuickControlWindow : BaseWindow
 {

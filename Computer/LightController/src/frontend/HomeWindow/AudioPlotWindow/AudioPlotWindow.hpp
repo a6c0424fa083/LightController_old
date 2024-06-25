@@ -4,7 +4,7 @@
 #include <imgui.h>
 #include <implot.h>
 
-#include "backend/ArduinoCommunication/ArduinoCommunication.hpp"
+#include "backend/ArduinoCommunication/ArduinoCommunication2.hpp"
 #include "frontend/other/BaseWindow/BaseWindow.hpp"
 
 class AudioPlotWindow : BaseWindow

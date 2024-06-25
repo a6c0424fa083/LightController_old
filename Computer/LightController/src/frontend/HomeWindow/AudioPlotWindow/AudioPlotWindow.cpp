@@ -14,6 +14,7 @@ void AudioPlotWindow::Draw()
 
 void AudioPlotWindow::DrawContent()
 {
+    /*
     ImGui::SetCursorPos(ImVec2(0.0F, 0.0F));
     ImPlot::SetNextAxisLimits(ImAxis_X1, 0.0, static_cast<double>(ArduinoCommunication::getAudioSampleSize() - 1));
     ImPlot::SetNextAxisLimits(ImAxis_Y1, 0.0, 1023.0);
@@ -24,5 +25,5 @@ void AudioPlotWindow::DrawContent()
 
     ImPlot::PlotLine("Left", ArduinoCommunication::getAudioData().at(0).data(), static_cast<int>(ArduinoCommunication::getAudioSampleSize()));
     ImPlot::PlotLine("Right", ArduinoCommunication::getAudioData().at(1).data(), static_cast<int>(ArduinoCommunication::getAudioSampleSize()));
-    ImPlot::EndPlot();
+    ImPlot::EndPlot();*/
 }
